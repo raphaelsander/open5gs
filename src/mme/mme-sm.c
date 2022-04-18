@@ -558,8 +558,6 @@ void mme_state_operational(ogs_fsm_t *s, mme_event_t *e)
         if (sgw_ue) {
             gnode = sgw_ue->gnode;
             ogs_assert(gnode);
-
-            mme_ue = sgw_ue->mme_ue;
         } else {
             gnode = e->gnode;
             ogs_assert(gnode);
@@ -592,31 +590,23 @@ void mme_state_operational(ogs_fsm_t *s, mme_event_t *e)
             break;
         case OGS_GTP2_CREATE_BEARER_REQUEST_TYPE:
             mme_s11_handle_create_bearer_request(
-                xact, mme_ue, &gtp_message.create_bearer_request);
+                xact, sgw_ue, &gtp_message.create_bearer_request);
             break;
         case OGS_GTP2_UPDATE_BEARER_REQUEST_TYPE:
             mme_s11_handle_update_bearer_request(
-                xact, mme_ue, &gtp_message.update_bearer_request);
+                xact, sgw_ue, &gtp_message.update_bearer_request);
             break;
         case OGS_GTP2_DELETE_BEARER_REQUEST_TYPE:
             mme_s11_handle_delete_bearer_request(
-                xact, mme_ue, &gtp_message.delete_bearer_request);
+                xact, sgw_ue, &gtp_message.delete_bearer_request);
             break;
         case OGS_GTP2_RELEASE_ACCESS_BEARERS_RESPONSE_TYPE:
             mme_s11_handle_release_access_bearers_response(
                 xact, sgw_ue, &gtp_message.release_access_bearers_response);
             break;
         case OGS_GTP2_DOWNLINK_DATA_NOTIFICATION_TYPE:
-            if (!sgw_ue) {
-                if (gtp_message.h.teid_presence)
-                    ogs_warn("No Context : TEID[%d]", gtp_message.h.teid);
-                else
-                    ogs_warn("No Context : No TEID");
-
-                break;
-            }
             mme_s11_handle_downlink_data_notification(
-                xact, mme_ue, &gtp_message.downlink_data_notification);
+                xact, sgw_ue, &gtp_message.downlink_data_notification);
             break;
         case OGS_GTP2_CREATE_INDIRECT_DATA_FORWARDING_TUNNEL_RESPONSE_TYPE:
             mme_s11_handle_create_indirect_data_forwarding_tunnel_response(

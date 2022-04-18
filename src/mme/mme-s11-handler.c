@@ -542,14 +542,14 @@ void mme_s11_handle_delete_session_response(
 }
 
 void mme_s11_handle_create_bearer_request(
-        ogs_gtp_xact_t *xact, mme_ue_t *mme_ue,
+        ogs_gtp_xact_t *xact, sgw_ue_t *sgw_ue,
         ogs_gtp2_create_bearer_request_t *req)
 {
     int rv;
     uint8_t cause_value = 0;
     mme_bearer_t *bearer = NULL, *default_bearer = NULL;
     mme_sess_t *sess = NULL;
-    sgw_ue_t *sgw_ue = NULL;
+    mme_ue_t *mme_ue = NULL;
 
     ogs_gtp2_f_teid_t *sgw_s1u_teid = NULL;
     ogs_gtp2_bearer_qos_t bearer_qos;
@@ -564,12 +564,12 @@ void mme_s11_handle_create_bearer_request(
      ***********************/
     cause_value = OGS_GTP2_CAUSE_REQUEST_ACCEPTED;
 
-    if (!mme_ue) {
+    if (!sgw_ue) {
         ogs_error("No Context in TEID");
         cause_value = OGS_GTP2_CAUSE_CONTEXT_NOT_FOUND;
     } else {
-        sgw_ue = mme_ue->sgw_ue;
-        ogs_assert(sgw_ue);
+        mme_ue = sgw_ue->mme_ue;
+        ogs_assert(mme_ue);
 
         if (req->linked_eps_bearer_id.presence == 0) {
             ogs_error("No Linked EBI");
@@ -710,13 +710,13 @@ void mme_s11_handle_create_bearer_request(
 }
 
 void mme_s11_handle_update_bearer_request(
-        ogs_gtp_xact_t *xact, mme_ue_t *mme_ue,
+        ogs_gtp_xact_t *xact, sgw_ue_t *sgw_ue,
         ogs_gtp2_update_bearer_request_t *req)
 {
     uint8_t cause_value = 0;
     mme_bearer_t *bearer = NULL;
     mme_sess_t *sess = NULL;
-    sgw_ue_t *sgw_ue = NULL;
+    mme_ue_t *mme_ue = NULL;
     ogs_gtp2_bearer_qos_t bearer_qos;
 
     ogs_assert(xact);
@@ -729,12 +729,12 @@ void mme_s11_handle_update_bearer_request(
      ***********************/
     cause_value = OGS_GTP2_CAUSE_REQUEST_ACCEPTED;
 
-    if (!mme_ue) {
+    if (!sgw_ue) {
         ogs_error("No Context in TEID");
         cause_value = OGS_GTP2_CAUSE_CONTEXT_NOT_FOUND;
     } else {
-        sgw_ue = mme_ue->sgw_ue;
-        ogs_assert(sgw_ue);
+        mme_ue = sgw_ue->mme_ue;
+        ogs_assert(mme_ue);
 
         if (req->bearer_contexts.presence == 0) {
             ogs_error("No Bearer");
@@ -845,14 +845,14 @@ void mme_s11_handle_update_bearer_request(
 }
 
 void mme_s11_handle_delete_bearer_request(
-        ogs_gtp_xact_t *xact, mme_ue_t *mme_ue,
+        ogs_gtp_xact_t *xact, sgw_ue_t *sgw_ue,
         ogs_gtp2_delete_bearer_request_t *req)
 {
     uint8_t cause_value = 0;
 
     mme_bearer_t *bearer = NULL;
     mme_sess_t *sess = NULL;
-    sgw_ue_t *sgw_ue = NULL;
+    mme_ue_t *mme_ue = NULL;
 
     ogs_assert(xact);
     ogs_assert(req);
@@ -864,12 +864,12 @@ void mme_s11_handle_delete_bearer_request(
      ***********************/
     cause_value = OGS_GTP2_CAUSE_REQUEST_ACCEPTED;
 
-    if (!mme_ue) {
+    if (!sgw_ue) {
         ogs_error("No Context in TEID");
         cause_value = OGS_GTP2_CAUSE_CONTEXT_NOT_FOUND;
     } else {
-        sgw_ue = mme_ue->sgw_ue;
-        ogs_assert(sgw_ue);
+        mme_ue = sgw_ue->mme_ue;
+        ogs_assert(mme_ue);
 
         if (req->linked_eps_bearer_id.presence == 1) {
            /*
@@ -1114,13 +1114,13 @@ void mme_s11_handle_release_access_bearers_response(
 }
 
 void mme_s11_handle_downlink_data_notification(
-        ogs_gtp_xact_t *xact, mme_ue_t *mme_ue,
+        ogs_gtp_xact_t *xact, sgw_ue_t *sgw_ue,
         ogs_gtp2_downlink_data_notification_t *noti)
 {
     uint8_t cause_value = 0;
 
     mme_bearer_t *bearer = NULL;
-    sgw_ue_t *sgw_ue = NULL;
+    mme_ue_t *mme_ue = NULL;
 
     ogs_assert(xact);
     ogs_assert(noti);
@@ -1132,12 +1132,12 @@ void mme_s11_handle_downlink_data_notification(
      ************************/
     cause_value = OGS_GTP2_CAUSE_REQUEST_ACCEPTED;
 
-    if (!mme_ue) {
+    if (!sgw_ue) {
         ogs_error("No UE Context");
         cause_value = OGS_GTP2_CAUSE_CONTEXT_NOT_FOUND;
     } else {
-        sgw_ue = mme_ue->sgw_ue;
-        ogs_assert(sgw_ue);
+        mme_ue = sgw_ue->mme_ue;
+        ogs_assert(mme_ue);
 
         if (noti->eps_bearer_id.presence == 0) {
             ogs_error("No Bearer ID");
